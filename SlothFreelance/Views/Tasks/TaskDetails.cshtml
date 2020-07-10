@@ -1,0 +1,200 @@
+﻿@model SlothFreelance.Models.Tasks
+
+@{
+    ViewBag.Title = "TaskDetails";
+}
+
+<section id="Vacancy" class="Vacancy">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                @if (Model.UserId == int.Parse(User.Identity.Name) && Model.Status == "Размещен")
+                {
+                    <div class="d-flex justify-content-end">
+                        <ul>
+                            <li>
+                                <a href="~/Tasks/EditTask/@Model.TaskId">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="~/Tasks/DeleteTask/@Model.TaskId">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                <div class="block-task">
+                    <div class="d-flex justify-content-between">
+                        <div class="button-zag">@Html.DisplayFor(model => model.TaskName)</div>
+                        <div class="button-price">@Html.DisplayFor(model => model.Price)Р</div>
+                    </div>
+                    <div class="button-ops">
+                        @Html.DisplayFor(model => model.Description)
+                    </div>
+                    <div class="d-flex align-items-end">
+                        <div class="button-kat">@Html.DisplayFor(model => model.Category.CategoryName)</div>
+                        <div class="ml-auto button-kat">@Model.PublishDate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@if (Model.WorkOnTasks.Count() != 0)
+{
+    <section id="Order" class="Order">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 ml-auto mr-auto">
+                    @if (Model.UserId == int.Parse(User.Identity.Name) && Model.Status == "В проверке")
+                    {
+                        <div class="Comments">
+                            @for (int i = 0; i < Model.WorkOnTasks.Count(); i++)
+                            {
+                                <div class="Comment">
+                                    <div class="block-task">
+                                        <span class="button-zag">@Model.WorkOnTasks.ToList()[i].Users.UserName</span>
+                                        <div>
+                                            @if (Model.WorkOnTasks.ToList()[i].File != null)
+                                            {
+                                                <a href="~/Tasks/DownoloadFile/@Model.WorkOnTasks.ToList()[i].WorkId">
+                                                    <button class="button_r">
+                                                        @Model.WorkOnTasks.ToList()[i].File
+                                                    </button>
+                                                </a>
+                                            }
+                                        </div>
+                                        <div class="button-ops">@Model.WorkOnTasks.ToList()[i].Comment</div>
+                                    </div>
+                                </div>
+                                if (i + 1 == Model.WorkOnTasks.Count())
+                                {
+                                    { Html.RenderAction("WorkTools", "Tasks", new { id = Model.TaskId }); }
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var item in Model.WorkOnTasks)
+                        {
+                            <div class="Comments">
+                                <div class="Comment">
+                                    <div class="block-task">
+                                        <span class="button-zag">@item.Users.UserName</span>
+                                        <div>
+                                            @if (item.File != null)
+                                            {
+                                                <a href="~/Tasks/DownoloadFile/@item.WorkId">
+                                                    <button class="button_r">
+                                                        @item.File
+                                                    </button>
+                                                </a>
+                                            }
+                                        </div>
+                                        <div class="button-ops">@item.Comment</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@if (Model.UserId != int.Parse(User.Identity.Name))
+{
+    { Html.RenderAction("AddRequest", new { task = Model }); }
+    <section class="Order">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 ml-auto mr-auto">
+                    @if (Model.Status == "В работе")
+                    {
+                        { Html.RenderAction("AddWork", new { id = Model.TaskId }); }
+                    }
+                    else if (Model.Status == "В проверке")
+                    {
+                        <div>Задача на проверке</div>
+                    }
+                    else if (Model.Status == "Размещен")
+                    {
+                        <div>Заказчик еще не выбрал исполнителя</div>
+                    }
+                    else
+                    {
+                        <div>Задача закрыта</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="Order">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 ml-auto mr-auto">
+                    @if (Model.Status == "В работе")
+                    {
+                        <div>Ждем решения задачи исполнителем.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    if (Model.Status == "Размещен")
+    {
+        <section id="Applications" class="Applications">
+            <div class="container">
+                <div class="row">
+                    @if (Model.Requests.Count() == 0)
+                    {
+                        <div class="col-lg-12">Никто пока не оставлял заявок</div>
+                    }
+                    else
+                    {
+                        foreach (var item in Model.Requests)
+                        {
+                            <div class="col-lg-12">
+                                <div class="block-task">
+                                    <div class="d-flex">
+                                        <div class="ots">
+                                            <a href="">
+                                                <div class="circle">
+                                                    <img src="/Content/Assets/chel.png" class="img-fluid">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="button-nadpis">@item.User.UserName</div>
+                                    </div>
+                                    <div class="button-ops">
+                                        @item.RequestText
+                                    </div>
+                                    <div class="d-flex align-items-end">
+                                        <div class="button-kat">Желаемая оплата:</div>
+                                        <div class="button-kat">@item.Price Р</div>
+                                    </div>
+                                    <a href="~/Tasks/SetExecuter?id=@item.TaskId&userId=@item.UserId&requestId=@item.RequestId">
+                                        <button class="button_r d-block ml-auto">
+                                            Выбрать исполнителем
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

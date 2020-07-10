@@ -1,0 +1,67 @@
+﻿@model SlothFreelance.Models.Users
+@{
+    ViewBag.Title = "Мои задачи";
+}
+
+<h2>Мои задачи</h2>
+
+@if (Model.Tasks.Count() != 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                Категория
+            </th>
+            <th>
+                Название задачи
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Дата
+            </th>
+            <th>
+                Удалить
+            </th>
+            <th>
+                Изменить
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Tasks)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.ActionLink(item.TaskName, "TaskDetails", "Tasks", new { id = item.TaskId }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PublishDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Удалить", "DeleteTask", "Tasks", new { id = item.TaskId }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("Изменить", "EditTask", "Tasks", new { id = item.TaskId }, null)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else 
+{
+    <div>У вас пока нет размещенных задач. @Html.ActionLink("Хотите разместить?", "CreateTask", "Tasks")</div>
+}

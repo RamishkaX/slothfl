@@ -1,0 +1,55 @@
+﻿@model SlothFreelance.Models.Users
+@{
+    ViewBag.Title = "Мои заявки";
+}
+
+<h2>Мои заявки</h2>
+
+@if (Model.TaskRequests.Count() != 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                Название задачи
+            </th>
+            <th>
+                Текст заявки
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Удалить
+            </th>
+            <th>
+                Изменить
+            </th>
+        </tr>
+
+        @foreach (var item in Model.TaskRequests)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Task.TaskName, "TaskDetails", "Tasks", new { id = item.TaskId }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RequestText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.ActionLink("Удалить", "DeleteRequest", "Account", new { id = item.RequestId }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("Изменить", "EditRequest", "Account", new { id = item.RequestId }, null)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <div>Вы еще не оставляли заявок на задачи.</div>
+}

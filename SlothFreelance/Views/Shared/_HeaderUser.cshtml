@@ -1,0 +1,26 @@
+﻿@model SlothFreelance.Models.HeaderViewModel
+<div class="chel">
+    <div class="dropdown">
+        <img src="~/Content/Assets/chel.png" class="img-fluid dropbtn">
+        <div class="dropdown-content">
+            <div class="menu-name">
+                @Html.ActionLink(Model.User.UserName, "Index", "Account")
+            </div>
+            <div class="menu-dol">@Model.User.Role.RoleName</div>
+            <div class="menu-dol">@Model.User.Money р.</div>
+            <hr>
+            @if (Model.User.Role.RoleId == 2)
+            {
+                @Html.ActionLink("Мои задачи", "MyTasks", "Account")
+            }
+            else
+            {
+                @Html.ActionLink("Мои заявки", "MyRequests", "Account")
+            }
+            @Html.ActionLink("Мой профиль", "Index", "Account")
+            @Html.ActionLink("Счет", "MoneyAccount", "Account")
+            @Html.ActionLink("Мои настройки", "Index", "Settings")
+            @Html.ActionLink("Выйти", "Logout", "Account")
+        </div>
+    </div>
+</div>

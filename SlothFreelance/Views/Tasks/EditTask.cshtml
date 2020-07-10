@@ -1,0 +1,50 @@
+﻿@model SlothFreelance.Models.CreateTask
+
+@{
+    ViewBag.Title = "Изменение задачи";
+}
+<section id="AddVac" class="AddVac">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="nad">Изменение задачи</h1>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-lg-6 mr-auto ml-auto">
+                @using (Html.BeginForm("EditTask", "Tasks", FormMethod.Post, new { @class = "ots" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.TaskId)
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.TaskName, htmlAttributes: new { @class = "button-zag" })
+                    @Html.EditorFor(model => model.TaskName, new { htmlAttributes = new { placeholder = "Кратко напишите о задаче" } })
+                    @Html.ValidationMessageFor(model => model.TaskName, "", new { @class = "text-danger" })
+                    <div class="vac-form">
+                        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "button-zag" })
+                        @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @placeholder = "Опишите подробнее вашу задачу" })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="vac-zarplata">
+                        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "button-zag" })
+                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { placeholder = "Цена за задачу" } })
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "button-zag" })
+                    @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="button_r">
+                            Изменить задачу
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Login";
+
+    if (ViewBag.ReturnUrl == null)
+    {
+        ViewBag.ReturnUrl = Url.Action("Index", "Home");
+    }
+}
+
+    <section id="Login" class="Login">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h1 class="zag">SLOTH FREELANCE</h1>
+                </div>
+                <div class="col-lg-12">
+                    <div class="block-task">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <img src="~/Content/Assets/login.png" class="img-fluid">
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="nav login-select-menu">
+                                    <li><a data-toggle="tab" href="#log" class="radio_but active">Войти</a></li>
+                                    <li><a data-toggle="tab" href="#reg" class="radio_but">Зарегистрироваться</a></li>
+                                </ul>
+                                
+                                <div class="tab-content">
+                                    <div id="log" class="tab-pane fade show active">
+                                        @Html.Partial("_LoginView")
+                                    </div>
+                                    <div id="reg" class="tab-pane fade">
+                                        @Html.Partial("_RegisterView")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

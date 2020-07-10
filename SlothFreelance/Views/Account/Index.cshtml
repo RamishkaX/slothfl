@@ -1,0 +1,141 @@
+﻿@model SlothFreelance.Models.ProfileViewModel
+@{
+    ViewBag.Title = "Профиль";
+}
+
+<section id="ava" class="ava">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 d-flex"></div>
+            <div>
+                @if (Model.Image != null)
+                {
+                    <div class="photo-ava">
+                        <img src="~/Content/Assets/Users/@Model.Image" class="img-fluid">
+                    </div>
+                }
+                else
+                {
+                    <div class="photo-ava">
+                        <img src="~/Content/Assets/ava.png" class="img-fluid">
+                        @if (Model.IsMyPage != false)
+                        {
+                            <div>
+                                @Html.Partial("_ProfileImageForm")
+                            </div>
+                        }
+                    </div>
+                }
+                @if (TempData["ImageError"] != null)
+                {
+                <p class="text-danger">@TempData["ImageError"]</p>
+                }
+            </div>
+            <div class="mr-auto">
+                <ul>
+                    <div class="name">
+                        <li>@Html.DisplayFor(model => model.UserName)</li>
+                    </div>
+                    <div class="dolzhnost">
+                        <li>@Html.DisplayFor(model => model.Role.RoleName)</li>
+                    </div>
+                </ul>
+            </div>
+            @if (Model.IsMyPage)
+            {
+                <div class="ml-auto">
+                    @if (Model.Role.RoleId == 2)
+                    {
+                        <div class="menu-right-profile">
+                            @Html.ActionLink("Мои задачи", "MyTasks")
+                    </div>
+                    }
+                    else
+                    {
+                        <div class="menu-right-profile">
+                        @Html.ActionLink("Мои заявки", "MyRequests")
+                    </div>
+                    }
+                    
+                    <div class="menu-right-profile">
+                        @Html.ActionLink("Мои настройки", "Index", "Settings")
+                    </div>
+                    <div class="menu-right-profile">
+                        @Html.ActionLink("Счет", "MoneyAccount", "Account")
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section id="uslugi" class="uslugi">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="zag">Мои Услуги</div>
+            </div>
+        </div>
+        @if (Model.IsMyPage)
+        {
+            <div class="row">
+                <div class="col-lg-4 ml-auto">
+                    <div class="uslugi">
+                        <button type="button" class="button_uslugi">
+                            <div class="button_nadpis">@Ajax.ActionLink("Добавить услугу", "AddService", new AjaxOptions { OnComplete = "modalShow()", UpdateTargetId = "modal_content" })</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="uslugi-block" class="row d-flex justify-content-between">
+            @if (Model.Services.Count == 0)
+            {
+                <div class="col-md-12 col-sm-12">
+                    @if (Model.IsMyPage)
+                    {
+                        <p>У вас пока нет услуг. @Ajax.ActionLink("Хотите добавить свою первую услугу?", "AddService", new AjaxOptions { OnComplete = "modalShow()", UpdateTargetId = "modal_content" })</p>
+                    }
+                    else
+                    {
+                        <p>Пользователь @Html.DisplayFor(model => model.UserName) не разместил свои услуги.</p>
+                    }
+                </div>
+            }
+            else
+            {
+                @Html.Partial("_Service", Model.Services)
+            }
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryUnobtrusive")
+    @Scripts.Render("~/bundles/userAva")
+    @if (Model.IsMyPage)
+    {
+        <script src="~/Scripts/modelScript.js"></script>
+        <script>
+            function editServiceImage(data) {
+                $("#modal_content").fadeOut("slow", function () {
+                    $("#modal_content").load("@Url.Action("EditServiceImage")");
+                    $("#modal_content").fadeIn("slow", function () {
+                        //ajaxFormValid();
+                        //$.validator.unobtrusive.parse('#gg');
+                        $("#ServiceId").val(data);
+                    });
+                });
+
+                $('.overlay, .close').unbind();
+
+                $('.overlay, .close').click(function () {
+                    $("#uslugi-block").load("@Url.Action("Service")");
+                    modalHidden();
+                });
+            }
+        </script>
+    }
+}

@@ -1,0 +1,30 @@
+﻿@model SlothFreelance.Models.ServiceImageEdit
+<div onclick="ajaxFormValid()" class="button_nadpis text-center">Выберите изображение для услуги</div>
+<hr />
+@using (Ajax.BeginForm("EditServiceImage", "Account", new AjaxOptions { OnSuccess = "OnSuccess", OnBegin = "modalButtonDisable()", OnFailure = "modalHaveErrors()", HttpMethod = "Post" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ServiceId)
+    @Html.ValidationMessageFor(model => model.ServiceId, "", new { @class = "text-danger" })
+    <input type="file" id="UploadImage" name="UploadImage" accept=".jpg, .jpeg, .png" />
+    <button type="submit" class="button_uslugi ml-auto">
+        <div class="button_nadpis">Сохранить</div>
+    </button>
+}
+
+<script>
+    ajaxFormValid();
+    function OnSuccess(data) {
+        var updateId = $("#modal_content");
+        var isError = data.indexOf("validation-summary-errors");
+        
+        if (isError == -1) {
+            updateId = $("#uslugi-block");
+            modalHidden();
+        }
+
+        updateId.empty();
+        updateId.append(data);
+    }
+</script>

@@ -1,0 +1,30 @@
+﻿@model SlothFreelance.Models.Settings
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Settings</h2>
+@if (Model.Image != null)
+{
+    <div style="width: 35%; position: relative;">
+        <img src="~/Content/Assets/Users/@Model.Image" />
+        @Html.Partial("_ProfileImageForm")
+        <label for="UploadImage"><a href="#">Изменить</a></label>
+    </div>
+    @Html.ActionLink("Удалить", "RemoveProfileImage", "Settings");
+}
+else
+{
+    <div style="width: 35%; position: relative;">
+        <img src="~/Content/Assets/user.jpg" />
+        @Html.Partial("_ProfileImageForm")
+        <label for="UploadImage"><a href="#">Загрузить</a></label>
+    </div>
+}
+@Html.Partial("_SettingsForm")
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/userAva")
+}

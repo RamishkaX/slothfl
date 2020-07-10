@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "Задачи";
+}
+
+<section id="Task" class="Task">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="zag ots">Доска задач</h1>
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="col-lg-4 ml-auto">
+                    <a href="~/Tasks/CreateTask">
+                        <div class="button d-flex align-items-center justify-content-center text-center">
+                            <h2 class="butnad">Разместить задачу</h2>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-lg-3 mr-auto">
+                <div class="block-kat">
+                    <ul class="Cat-nad">
+                        <li><a class="filter-link" tabindex="1" href="#" id="filter1">Дизайн</a></li>
+                        <li><a class="filter-link" tabindex="2" href="#" id="filter2">IT</a></li>
+                        <li><a class="filter-link" tabindex="3" href="#" id="filter3">Тексты и переводы</a></li>
+                        <li><a class="filter-link" tabindex="4" href="#" id="filter4">Музыка и видео</a></li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div id="tasks">
+                    @{ Html.RenderAction("Tasks", new { page = ViewBag.Page, filter = ViewBag.Filter }); }
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 ml-auto mr-auto">
+                        <a href="#" class="showMore">
+                            <div class="button d-flex align-items-center justify-content-center text-center">
+                                <h2 class="butnad">Показать еще</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <script>
+        var filters = [];
+        var page = 1;
+        @if (ViewBag.Filter != null)
+        {
+            foreach(var item in ViewBag.Filter)
+            {
+                <text>
+                    filters.push(@item);
+                </text>
+            }
+        }
+
+        page = @ViewBag.Page;
+
+        function getFilters() {
+            var f = "";
+            if (filters.length != 0) {
+                for (var i = 0; i < filters.length; i++) {
+                    f += "&filter=" + filters[i];
+                }
+            }
+            return f;
+        }
+
+        function entryFilter() {
+            history.pushState(null, null, "Tasks?page=" + page + getFilters() + "");
+            history.replaceState(null, null, "Tasks?page=" + page + getFilters() + "");
+            $("#tasks").load("Tasks/Tasks?page=" + page + getFilters() + "");
+        }
+
+        function addFilter(id, name, isFirstload) {
+            if ($.inArray(id, filters) == -1 || !$('div').is('#'+id)) {
+                $('.block-kat').append('<div class="text-center" id="' + id + '"><hr><button type="button" class="close" tabindex="' + id +'">&times;</button><span class="button-ops">'+name+'</span></div>');
+                if (!isFirstload) {
+                    filters.push(id);
+                    entryFilter();
+                }
+            }
+        }
+
+        function removeFilter(id) {
+            if ($.inArray(id, filters) != -1) {
+                filters = $.grep(filters, function (value) {
+                    return value != id;
+                });
+                $('#' + id).remove();
+                entryFilter();
+            }
+        }
+
+        $(document).ready(function () {
+            if (filters.length != 0) {
+                for (var i = 0; i < filters.length; i++) {
+                    addFilter(parseInt(filters[i]), $('#filter' + filters[i]).text(), true);
+                }
+            }
+            $('.filter-link').click(function(event){
+                event.preventDefault();
+                addFilter(parseInt($(this).attr("tabindex")), $(this).text(), false);
+            });
+            $('.showMore').click(function (event) {
+                event.preventDefault();
+                page += 1;
+                entryFilter();
+            });
+        });
+
+        $('.block-kat').on('click', '.close', function (e) {
+            removeFilter(parseInt($(this).attr("tabindex")));
+        });
+    </script>
+}

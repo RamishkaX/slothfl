@@ -1,0 +1,7 @@
+﻿@using (Html.BeginForm("AddProfileImage", "Settings", new { redirectUrl = ViewBag.RedirectUrl }, FormMethod.Post, new { enctype = "multipart/form-data", id = "myAvaForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <label class="addMyAva d-flex align-items-center" for="UploadImage">Добавить фото</label>
+    <input type="file" class="avafile" id="UploadImage" name="UploadImage" accept=".jpg, .jpeg, .png" />
+}

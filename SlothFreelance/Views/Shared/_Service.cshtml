@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SlothFreelance.Models.Services>
+
+@foreach (var services in Model)
+{
+    <div class="col-lg-3">
+        <div>
+            <div class="photo-ots">
+                @Ajax.ActionLink("Изменить", "EditService", new { id = services.ServiceId }, new AjaxOptions { OnComplete = "modalShow()", UpdateTargetId = "modal_content" })
+                @Ajax.ActionLink("Удалить", "DeleteService", new { id = services.ServiceId }, new AjaxOptions { UpdateTargetId = "uslugi-block", Confirm = $"Вы уверены, что хотите удалить услугу {services.ServiceName}?" })
+                <div class="photo-uslugi">
+                    @if (services.ServiceImage != null)
+                    {
+                        <div><img src="~/Content/Assets/Users/@services.ServiceImage" class="img-fluid"></div>
+                    }
+                    else
+                    {
+                        <div><img src="~/Content/Assets/photo.png" class="img-fluid"></div>
+                    }
+                </div>
+            </div>
+            <div class="photo-text-ots text-center">
+                @services.ServiceName
+            </div>
+        </div>
+    </div>
+}
